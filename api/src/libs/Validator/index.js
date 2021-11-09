@@ -3,7 +3,7 @@ const { InvalidValidationError, InvalidFieldError } = require('../Errors')
 const valid = (field, constraint, object) => {
     // required
     if(constraint === 'required'){
-        if(!object[field] || object[field].length === 0){
+        if(object[field] === undefined || object[field].length === 0){
             throw new InvalidFieldError(`Field ${field} is invalid. It is required.`)
         }
     }
