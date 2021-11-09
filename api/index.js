@@ -4,9 +4,10 @@ const express = require('express')
 
 const app = express()
 
-// const routes = require('./src/routes')
+const routes = require('./src/routes')
 
 app.use(express.json())
+app.use(routes)
 
 
 app.listen(PORT, err => console.log(err?.message || `API listening on port ${PORT}`))
