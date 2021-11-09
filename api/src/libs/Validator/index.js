@@ -1,23 +1,23 @@
 const { InvalidValidationError, InvalidFieldError } = require('../Errors')
 
-const valid = (field, constraint) => {
+const valid = (field, constraint, object) => {
     // required
     if(constraint === 'required'){
-        if(!field || field.length === 0){
+        if(!object[field] || object[field].length === 0){
             throw new InvalidFieldError(`Field ${field} is invalid. It is required.`)
         }
     }
 
     // string
     if(constraint === 'string'){
-        if(typeof field !== 'string'){
+        if(typeof object[field] !== 'string'){
             throw new InvalidFieldError(`Field ${field} must be a string.`)
         }
     }
 
     // number
     if(constraint === 'number'){
-        if(typeof field !== 'number'){
+        if(typeof object[field] !== 'number'){
             throw new InvalidFieldError(`Field ${field} must be a number.`)
         }
     }
@@ -26,8 +26,8 @@ const valid = (field, constraint) => {
     if(constraint.indexOf('min') !== -1){
         const [min, value] = constraint.split('=')
 
-        if(field < value){
-            throw new InvalidFieldError(`Field ${field} must be < ${value}`)
+        if(object[field] < value){
+            throw new InvalidFieldError(`Field ${field} must be > ${value}`)
         }
     }
 
@@ -35,7 +35,7 @@ const valid = (field, constraint) => {
     if(constraint.indexOf('max') !== -1){
         const [max, value] = constraint.split('=')
 
-        if(field < value){
+        if(object[field] > value){
             throw new InvalidFieldError(`Field ${field} must be < ${value}`)
         }
     }
@@ -44,20 +44,20 @@ const valid = (field, constraint) => {
     if(constraint === 'date'){
         const regex = /\d{4}-\d{2}-\d{2}/
 
-        if(!regex.test(field)){
+        if(!regex.test(object[field])){
             throw new InvalidFieldError(`Field ${field} must be a date on format: YYYY-MM-DD.`)
         }
     }
 }
 
-const validator = (object, validations = []) => {
+const validate = (object, validations = []) => {
     if(validations.length === 0) return true
 
     validations.forEach(validation => {
         if(validation.indexOf(':') === -1){
             throw new InvalidValidationError(`Validation is not valid. Use the pattern: field:validation`)
         }
-        const [field, criteria] = validation.split(':')
+        let [field, criteria] = validation.split(':')
 
         // valid field name
         if(!field || field.length === 0){
@@ -65,14 +65,14 @@ const validator = (object, validations = []) => {
         }
 
         // valid validations separated by |
-        criteria.forEach(item => {
-            const items = item.split('|')
+        criteria = criteria.split('|')
 
-            items.forEach(constraints => {
-                valid(field, constraints)
-            })
+        criteria.forEach(item => {
+            valid(field, item, object)
         })
     })
 }
 
-module.exports = validator
+module.exports = {
+    validate
+}

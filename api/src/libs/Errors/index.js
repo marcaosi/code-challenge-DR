@@ -1,5 +1,6 @@
-const InvalidValidationError = require("./InvalidValidationError")
+const InvalidValidationError = require('./InvalidValidationError')
+const InvalidFieldError = require('./InvalidFieldError')
 
 module.exports = {
-    InvalidValidationError
+    InvalidValidationError, InvalidFieldError
 }
