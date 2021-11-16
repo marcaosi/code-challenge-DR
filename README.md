@@ -3,7 +3,7 @@ code challegne digital republic
 
 # START
 
-O projeto consta de duas aplicações: O Cliente e a API.
+O projeto é composto de duas aplicações: O Cliente e a API.
 
 Para rodá-los basta abrir um terminal em cada diretório repectivamente e executar o comando "npm start".
 
